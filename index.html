@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+  </head>
+  </body>
+  </body>
+  <script>
+
+    const instantiate = (bytes, imports = {}) =>
+      WebAssembly.compile(bytes).then(m =>
+        new WebAssembly.Instance(m, imports)
+      )
+
+    fetch('hello.wasm')
+      .then(response => response.arrayBuffer())
+      .then(bytes => instantiate(bytes, {}))
+
+/*
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'hello.wasm', true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function() {
+      Module.wasmBinary = xhr.response;
+      var script = document.createElement('script');
+      script.src = "hello.js";
+      document.body.appendChild(script);
+
+    };
+    xhr.send(null);
+*/
+
+  </script>
+</html>
