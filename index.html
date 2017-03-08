@@ -11,12 +11,15 @@
 
     const instantiate = (bytes, imports = {}) =>
       WebAssembly.compile(bytes).then(m =>
-        new WebAssembly.Instance(m, imports)
+          WebAssembly.instantiate(m, imports).then(i => {
+            console.log('instance')
+            console.log(i)
+          })
       )
 
-    fetch('hello.wasm')
+    fetch('sum.wasm')
       .then(response => response.arrayBuffer())
-      .then(bytes => instantiate(bytes, {}))
+      .then(bytes => instantiate(bytes, { }))
 
 /*
     var xhr = new XMLHttpRequest();
