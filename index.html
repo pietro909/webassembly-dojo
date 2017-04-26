@@ -9,17 +9,30 @@
   </body>
   <script>
 
-    const instantiate = (bytes, imports = {}) =>
-      WebAssembly.compile(bytes).then(m =>
-          WebAssembly.instantiate(m, imports).then(i => {
-            console.log('instance')
-            console.log(i)
+const load = (filename) => {
+  return fetch(filename)
+    .then(response => response.arrayBuffer())
+    .then(buffer => WebAssembly.compile(buffer))
+    .then(module => {
+      const imports = {
+        env: {
+          memoryBase: 0,
+          tableBase: 0,
+          memory: new WebAssembly.Memory({
+            initial: 256
+          }),
+          table: new WebAssembly.Table({
+            initial: 0,
+            element: 'anyfunc'
           })
-      )
+        }
+      };
 
-    fetch('sum.wasm')
-      .then(response => response.arrayBuffer())
-      .then(bytes => instantiate(bytes, { }))
+      return new WebAssembly.Instance(module, imports);
+    });
+}
+
+load('hello-bundle.wasm')
 
 /*
     var xhr = new XMLHttpRequest();
